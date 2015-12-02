@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin id="cordova-plugin-device" version="0.2.3" xmlns="http://apache.org/cordova/ns/plugins/1.0">
+<plugin id="localnotificationwp8" version="0.0.1a" xmlns="http://apache.org/cordova/ns/plugins/1.0">
     <name>LocalNotificationWP8</name>
     <description>A plugin to use local notifications on wp8 (Windows Phone 8.1).</description>
     <license>Apache 2.0</license>
