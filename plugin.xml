@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="cordova-plugin-device" version="0.2.3" xmlns="http://apache.org/cordova/ns/plugins/1.0">
+    <name>LocalNotificationWP8</name>
+    <description>A plugin to use local notifications on wp8 (Windows Phone 8.1).</description>
+    <license>Apache 2.0</license>
+    <keywords>cordova,wp8,windows,phone,local,notification</keywords>
+    <author>Julian Stock</author>
+    <js-module name="LocalNotificationWP8" src="www/localnotification-wp8.js">
+        <clobbers target="plugin.localnotificationwp8"/>
+    </js-module>
+    <platform name="wp8">
+        <config-file parent="/*" target="config.xml">
+            <feature name="LocalNotificationWP8">
+                <param name="wp-package" value="LocalNotificationWP8"/>
+            </feature>
+        </config-file>
+        <source-file src="src/wp8/LocalNotificationWP8.cs"/>
+        <!-- <source-file src="src/wp8/Options.cs"/> -->
+    </platform>
+</plugin>
