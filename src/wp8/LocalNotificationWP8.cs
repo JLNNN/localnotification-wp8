@@ -52,9 +52,12 @@ namespace Cordova.Extension.Commands
             {
                 for (int i = 0; i < reminders.Length; i++)
                 {
-                    Reminder planReminder = new Reminder(reminders[i].Id);
+                    Reminder planReminder = new Reminder(System.Guid.NewGuid().ToString());
                     planReminder.Title = reminders[i].Title;
                     planReminder.Content = reminders[i].Text;
+
+                    // @FIXME: how to navigate to a specific page or at least open the app?
+                    // planReminder.NavigationUri = new Uri("/MainPage.xaml", UriKind.Relative);
 
                     DateTime beginTime = new DateTime(1970, 1, 1, 0, 0, 0);
                     beginTime = beginTime.AddSeconds(Int64.Parse(reminders[i].At) / 1000);
