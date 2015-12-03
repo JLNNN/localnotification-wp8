@@ -15,6 +15,6 @@
             </feature>
         </config-file>
         <source-file src="src/wp8/LocalNotificationWP8.cs"/>
-        <!-- <source-file src="src/wp8/Options.cs"/> -->
+        <source-file src="src/wp8/WP8Reminder.cs"/>
     </platform>
 </plugin>

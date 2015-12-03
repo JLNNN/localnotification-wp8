@@ -1,32 +1,82 @@
 using WPCordovaClassLib.Cordova;
 using WPCordovaClassLib.Cordova.Commands;
 using WPCordovaClassLib.Cordova.JSON;
+using System;
+using Microsoft.Phone.Scheduler;
+using System.Collections.Generic;
+// using System.Diagnostics;
+using de.julianstock.Cordova.Plugin.LocalNotificationWP8;
 
-namespace de.julianstock.localnotificationwp8
+namespace Cordova.Extension.Commands
 {
-    public class Echo : BaseCommand
+    public class LocalNotificationWP8 : BaseCommand
     {
-        public void echo(string options)
+        public void cancelAll()
         {
-            string optVal = null;
+            IEnumerable<Reminder> oldReminders = ScheduledActionService.GetActions<Reminder>();
+            foreach (Reminder tmpReminder in oldReminders)
+            {
+                try
+                {
+                    ScheduledActionService.Remove(tmpReminder.Name);
+                }
+                catch (Exception)
+                {
+                    // Debug.WriteLine("couldn't cancel reminder: {0}", tmpReminder.Name);
+                }
+            }
+
+            DispatchCommandResult();
+        }
+
+        public void schedule(string jsonArgs)
+        {
+            string[] args = null;
+            WP8Reminder[] reminders = null;
 
             try
             {
-                optVal = JsonHelper.Deserialize<string[]>(options)[0];
+                args = JsonHelper.Deserialize<string[]>(jsonArgs);
+                reminders = JsonHelper.Deserialize<WP8Reminder[]>(args[0]);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 // simply catch the exception, we handle null values and exceptions together
             }
 
-            if (optVal == null)
+            if (reminders == null)
             {
                 DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION));
             }
             else
             {
-                // ... continue on to do our work
-                DispatchCommandResult(new PluginResult(PluginResult.Status.OK, optVal));
+                for (int i = 0; i < reminders.Length; i++)
+                {
+                    Reminder planReminder = new Reminder(reminders[i].Id);
+                    planReminder.Title = reminders[i].Title;
+                    planReminder.Content = reminders[i].Text;
+
+                    DateTime beginTime = new DateTime(1970, 1, 1, 0, 0, 0);
+                    beginTime = beginTime.AddSeconds(Int64.Parse(reminders[i].At) / 1000);
+
+                    // @FIXME: we need to add 1 hour in germany, why?
+                    beginTime = beginTime.AddHours(1);
+
+                    DateTime endTime = beginTime;
+                    endTime = endTime.AddMinutes(5);
+                    planReminder.RecurrenceType = RecurrenceInterval.None;
+
+                    if (beginTime > DateTime.Now && endTime > beginTime)
+                    {
+                        planReminder.BeginTime = beginTime;
+                        planReminder.ExpirationTime = endTime;
+                        ScheduledActionService.Add(planReminder);
+                    }
+
+                    // Debug.WriteLine(reminders[i].ToString());
+                }
+
+                DispatchCommandResult();
             }
         }
     }
