@@ -4,14 +4,14 @@ using WPCordovaClassLib.Cordova.JSON;
 using System;
 using Microsoft.Phone.Scheduler;
 using System.Collections.Generic;
-// using System.Diagnostics;
+using System.Diagnostics;
 using de.julianstock.Cordova.Plugin.LocalNotificationWP8;
 
 namespace Cordova.Extension.Commands
 {
     public class LocalNotificationWP8 : BaseCommand
     {
-        public void cancelAll()
+        public void cancelAll(string jsonArgs)
         {
             IEnumerable<Reminder> oldReminders = ScheduledActionService.GetActions<Reminder>();
             foreach (Reminder tmpReminder in oldReminders)
@@ -22,11 +22,11 @@ namespace Cordova.Extension.Commands
                 }
                 catch (Exception)
                 {
-                    // Debug.WriteLine("couldn't cancel reminder: {0}", tmpReminder.Name);
+                    Debug.WriteLine("couldn't cancel reminder: {0}", tmpReminder.Name);
                 }
             }
 
-            DispatchCommandResult();
+            DispatchCommandResult(new PluginResult(PluginResult.Status.OK, true));
         }
 
         public void schedule(string jsonArgs)
@@ -72,20 +72,27 @@ namespace Cordova.Extension.Commands
                         planReminder.ExpirationTime = endTime;
                         ScheduledActionService.Add(planReminder);
                     }
-
-                    // Debug.WriteLine(reminders[i].ToString());
                 }
 
-                DispatchCommandResult();
+                DispatchCommandResult(new PluginResult(PluginResult.Status.OK, true));
             }
         }
 
-        public void getScheduled()
+        public void getScheduledIds(string jsonArgs)
         {
             IEnumerable<Reminder> reminders = ScheduledActionService.GetActions<Reminder>();
-            String remindersJSON = JsonHelper.Serialize<WP8Reminder[]>(reminders);
+            string reminderIds = "";
+            foreach(Reminder reminder in reminders)
+            {
+                reminderIds += "," + reminder.Name;
+            }
 
-            DispatchCommandResult(new PluginResult(PluginResult.Status.OK, remindersJSON));
+            if (reminderIds.Length > 0)
+            {
+                reminderIds = reminderIds.Substring(1);
+            }
+
+            DispatchCommandResult(new PluginResult(PluginResult.Status.OK, reminderIds));
         }
     }
 }

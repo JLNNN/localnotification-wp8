@@ -7,11 +7,11 @@ window.scheduleLocalNotificationsWP8 = function(str, callback) {
 window.cancelAllLocalNotificationsWP8 = function(callback) {
     cordova.exec(callback, function(err) {
         console.log(err);
-    }, "LocalNotificationWP8", "cancelAll");
+    }, "LocalNotificationWP8", "cancelAll", []);
 };
 
-window.getScheduledLocalNotificationsWP8 = function(callback) {
+window.getScheduledIdsLocalNotificationsWP8 = function(callback) {
     cordova.exec(callback, function(err) {
         console.log(err);
-    }, "LocalNotificationWP8", "getScheduled");
+    }, "LocalNotificationWP8", "getScheduledIds", []);
 };
