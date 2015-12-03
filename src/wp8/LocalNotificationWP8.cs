@@ -79,5 +79,13 @@ namespace Cordova.Extension.Commands
                 DispatchCommandResult();
             }
         }
+
+        public void getScheduled()
+        {
+            IEnumerable<Reminder> reminders = ScheduledActionService.GetActions<Reminder>();
+            String remindersJSON = JsonHelper.Serialize<WP8Reminder[]>(reminders);
+
+            DispatchCommandResult(new PluginResult(PluginResult.Status.OK, remindersJSON));
+        }
     }
 }
